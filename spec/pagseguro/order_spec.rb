@@ -1,9 +1,37 @@
 require "spec_helper"
+require 'uri'
+
+
+
 
 describe PagSeguro::Order do
   before do
     @order = PagSeguro::Order.new
     @product = {:price => 9.90, :description => "Ruby 1.9 PDF", :id => 1}
+    @product2 = {:price => 9.90, :description => "Ruby 1.9 PDF", :id => 1}
+    @product3 = {:price => 9.90, :description => "hello buddy", :id => 1}
+
+
+
+
+    @order.billing = {
+      :name                  => "John Doe",
+      :email                 => "john@doe.com",
+      :address_zipcode       => "01234-567",
+      :address_street        => "Rua Orobo",
+      :address_number        => 72,
+      :address_complement    => "Casa do fundo",
+      :address_neighbourhood => "Tenorio",
+      :address_city          => "Pantano Grande",
+      :address_state         => "AC",
+      :address_country       => "Brasil",
+      :phone_area_code       => "22",
+      :phone_number          => "56273440"
+    }
+    @order.shipping_type = "EN"
+
+    PagSeguro.stub :config => {"authenticity_token" => "xx", "email" => "nandosousafr@gmail.com"}
+
   end
 
   it "should set order id when instantiating object" do
@@ -30,6 +58,7 @@ describe PagSeguro::Order do
 
   it "should add product with default settings" do
     @order << @product
+
     @order.products.should have(1).item
 
     p = @order.products.first
@@ -91,4 +120,45 @@ describe PagSeguro::Order do
   it "should initialize billing attribute" do
     @order.billing.should be_instance_of(Hash)
   end
+
+  it "should revert big decimal to float" do
+    @order << @product
+    @order.data_to_send["itemAmount1"].should == "9.90"
+
+
+  end
+
+
+  it "should eq to shippingType to post" do
+    @order << @product
+    @order.data_to_send["shippingType"].should == 1
+  end
+
+
+  it "should return a valid code" do
+    @order << @product
+    @order << @product2
+    @order << @product3
+    
+    puts @order.data_to_send
+    
+    @order.send.should match(/[0-9-A-F]{32}/)
+    
+  end
+
+  it "should return valid link" do
+    @order << @product
+    @order << @product2
+    @order << @product3
+    
+    code = @order.send
+    
+    @order.link_to_pay.should eql("https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{code}")
+    
+  end
+
+
+
+
+
 end

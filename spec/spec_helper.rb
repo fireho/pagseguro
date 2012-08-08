@@ -7,4 +7,12 @@ require "rspec/rails"
 require "nokogiri"
 require "support/matcher"
 
-FakeWeb.allow_net_connect = false
+FakeWeb.allow_net_connect = true
+
+# is valid url
+def valid?(url)
+  uri = URI.parse(url)
+  uri.kind_of?(URI::HTTP)
+rescue URI::InvalidURIError
+  false
+end
