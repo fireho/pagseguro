@@ -1,8 +1,6 @@
 module PagSeguro
   class Order
-    require 'uri'
-    require 'net/http'
-    require 'active_support/core_ext/hash/conversions'
+
     # Map all billing attributes that will be added as form inputs.
     BILLING_MAPPING = {
       :name                  => "cliente_nome",
@@ -98,10 +96,11 @@ module PagSeguro
       request = Net::HTTP::Post.new(uri.path)
       request.form_data = self.data_to_send
       response = http.start {|r| r.request request }
-      response.body
+      puts response.body
     
       
       hash = Hash.from_xml(response.body)
+      
       
       
       @@code = hash["checkout"]["code"]
@@ -124,15 +123,12 @@ module PagSeguro
         i += 1
 
 
-        item_price = BigDecimal(product[:price]).to_f
-        item_amount = item_price / 100
-        
         
         data["itemId#{i}"] = product[:id]
         data["itemDescription#{i}"] = product[:description]
-        data["itemAmount#{i}"] = "%.2f" % item_amount.to_f
-        data["itemShippingCost#{i}"] = product[:shipping]  if product[:shipping]
-         data["itemQuantity#{i}"] = product[:quantity]
+        data["itemAmount#{i}"] = revert_unit(product[:price])
+        data["itemShippingCost#{i}"] = revert_unit(product[:shipping]) if product[:shipping]
+        data["itemQuantity#{i}"] = product[:quantity]
       end
       
 
@@ -171,7 +167,14 @@ module PagSeguro
       number = (BigDecimal("#{number}") * unit).to_i unless number.nil? || number.kind_of?(Integer)
       number
     end
-
+    
+    def revert_unit(number)
+      item_price = BigDecimal(number).to_f
+      item_amount = item_price / 100
+      "%.2f" % item_amount
+      
+    end
+    
     def shipping_type_revert(type)
       case type
       when "EN" then 1
