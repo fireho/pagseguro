@@ -1,5 +1,7 @@
+
 module PagSeguro
   class Order
+    
 
     # Map all billing attributes that will be added as form inputs.
     BILLING_MAPPING = {
@@ -127,7 +129,7 @@ module PagSeguro
 
         
         data["itemId#{i}"] = product[:id]
-        data["itemDescription#{i}"] = product[:description]
+        data["itemDescription#{i}"] = Utils.to_utf8(product[:description])
         data["itemAmount#{i}"] = revert_unit(product[:price])
         data["itemShippingCost#{i}"] = revert_unit(product[:shipping]) if product[:shipping]
         data["itemQuantity#{i}"] = product[:quantity]
