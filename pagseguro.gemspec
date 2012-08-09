@@ -23,4 +23,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails"  , "~> 2.7"
   s.add_development_dependency "nokogiri"     , "~> 1.5"
   s.add_development_dependency "sqlite3"      , "~> 1.3"
+ 
 end

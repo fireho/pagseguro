@@ -86,7 +86,7 @@ module PagSeguro
     end
 
     def send
-      params = URI.encode_www_form(self.data_to_send)
+      params = self.data_to_send.to_param
 
       uri = URI.parse('https://ws.pagseguro.uol.com.br/v2/checkout/')
       http = Net::HTTP.new(uri.host, uri.port)
@@ -169,9 +169,9 @@ module PagSeguro
     end
     
     def revert_unit(number)
-      item_price = BigDecimal(number).to_f
+      item_price = number.to_f
       item_amount = item_price / 100
-      "%.2f" % item_amount
+      "%.2f" % item_amount  
       
     end
     

@@ -80,7 +80,7 @@ class CartController < ApplicationController
     @invoice.products.each do |product|
       # Estes sao os atributos necessarios. Por padrao, peso (:weight) eh definido para 0,
       # quantidade eh definido como 1 e frete (:shipping) eh definido como 0.
-      @order.add :id => product.id, :price => product.price, :description => product.title
+      
     end
   end
 end
