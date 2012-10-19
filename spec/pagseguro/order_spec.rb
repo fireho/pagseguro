@@ -27,9 +27,15 @@ describe PagSeguro::Order do
     }
     @order.shipping_type = "EN"
 
-    PagSeguro.stub :config => {"authenticity_token" => "26C19EE2DF014CAD91E63657BDD9A3F4", "email" => "nandosousafr@gmail.com"}
+    PagSeguro.stub :config => {"authenticity_token" => "26C19EE2DF014CAD93F63657CDD9A3EX", "email" => "nandosousafr@gmail.com"}
+
+    @order.stub :code => "26C19EE2DF014CAD91E63657BDD9A3F4"
 
   end
+
+
+
+
 
   it "should set order id when instantiating object" do
     @order = PagSeguro::Order.new("ABCDEF")
@@ -132,36 +138,32 @@ describe PagSeguro::Order do
   end
 
 
-  it "should return a valid code" do
-    @order << @product
-    @order << @product2
-    @order << @product3
-    
-    puts @order.data_to_send
-    
-    @order.send.should match(/[0-9-A-F]{32}/)
-    
-  end
+
 
   it "should return valid link" do
     @order << @product
     @order << @product2
     @order << @product3
-    
-    
-    puts @order.products.inspect
-    
-    code = @order.send
+
+
+
     link = @order.link_to_pay
-    
-    puts link
-    
-    
-    link.should eql("https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{code}")
-    
+
+    link.should == "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{@order.code}"
+
   end
 
+  it "should customize token and email inline" do
+    PagSeguro.stub :config => {"authenticity_token" => nil, "email" => nil}
 
+
+    @order.pagseguro_token = "26C19EE2DF014CAD91E63657BDD9A3F4"
+    @order.pagseguro_email = "nandosousafr@gmail.com"
+
+    @order.data_to_send["token"].should == "26C19EE2DF014CAD91E63657BDD9A3F4"
+    @order.data_to_send["email"].should == "nandosousafr@gmail.com"
+
+  end
 
 
 

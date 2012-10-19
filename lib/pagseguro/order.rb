@@ -1,7 +1,7 @@
 
 module PagSeguro
   class Order
-    
+
 
     # Map all billing attributes that will be added as form inputs.
     BILLING_MAPPING = {
@@ -25,9 +25,14 @@ module PagSeguro
     # The billing info that will be sent to PagSeguro.
     attr_accessor :billing
 
+
     # Define the shipping type.
     # Can be EN (PAC) or SD (Sedex)
     attr_accessor :shipping_type
+
+    attr_accessor :pagseguro_token, :pagseguro_email
+    attr_reader :code
+
 
     def initialize(order_id = nil)
       reset!
@@ -92,7 +97,7 @@ module PagSeguro
 
       uri = URI.parse('https://ws.pagseguro.uol.com.br/v2/checkout/')
       http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true 
+      http.use_ssl = true
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
       http.ca_file = File.dirname(__FILE__) + "/cacert.pem"
@@ -100,25 +105,19 @@ module PagSeguro
       request = Net::HTTP::Post.new(uri.path)
       request.form_data = self.data_to_send
       response = http.start {|r| r.request request }
-      puts response.body
-    
-      
+
+
+
       hash = Hash.from_xml(response.body)
-      
-      
-      
-      @@code = hash["checkout"]["code"]
+
+      @code = hash["checkout"]["code"]
 
     end
 
-    
+
     def link_to_pay
-      code = @@code
-      link = "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{code}"
+      "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{self.code}"
     end
-    
-  
-
 
     def data_to_send
       data = {}
@@ -126,15 +125,13 @@ module PagSeguro
       self.products.each_with_index do |product, i|
         i += 1
 
-
-        
         data["itemId#{i}"] = product[:id]
         data["itemDescription#{i}"] = Utils.to_iso8859(product[:description])
         data["itemAmount#{i}"] = revert_unit(product[:price])
         data["itemShippingCost#{i}"] = revert_unit(product[:shipping]) if product[:shipping]
         data["itemQuantity#{i}"] = product[:quantity]
       end
-      
+
 
 
 
@@ -157,28 +154,34 @@ module PagSeguro
       data["currency"] = "BRL"
       data["reference"] = self.id
 
-      data["token"] = PagSeguro.config["authenticity_token"]
-      data["email"] = PagSeguro.config["email"]
 
-      data
+      if @pagseguro_token.nil?
+        data["token"] = PagSeguro.config["authenticity_token"]
+        data["email"] = PagSeguro.config["email"]
+      else
+        data["token"] = @pagseguro_token
+        data["email"] = @pagseguro_email
+      end
+
+      return data
 
     end
 
-    
+
 
     private
     def convert_unit(number, unit)
       number = (BigDecimal("#{number}") * unit).to_i unless number.nil? || number.kind_of?(Integer)
       number
     end
-    
+
     def revert_unit(number)
       item_price = number.to_f
       item_amount = item_price / 100
-      "%.2f" % item_amount  
-      
+      "%.2f" % item_amount
+
     end
-    
+
     def shipping_type_revert(type)
       case type
       when "EN" then 1
@@ -186,7 +189,6 @@ module PagSeguro
       when "FT" then 3
       end
     end
-
 
 
   end
