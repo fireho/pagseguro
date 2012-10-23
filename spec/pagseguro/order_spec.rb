@@ -27,6 +27,8 @@ describe PagSeguro::Order do
     }
     @order.shipping_type = "EN"
 
+
+
     PagSeguro.stub :config => {"authenticity_token" => "26C19EE2DF014CAD93F63657CDD9A3EX", "email" => "nandosousafr@gmail.com"}
 
     @order.stub :code => "26C19EE2DF014CAD91E63657BDD9A3F4"
@@ -153,17 +155,28 @@ describe PagSeguro::Order do
 
   end
 
-  it "should customize token and email inline" do
-    PagSeguro.stub :config => {"authenticity_token" => nil, "email" => nil}
 
-
-    @order.pagseguro_token = "26C19EE2DF014CAD91E63657BDD9A3F4"
-    @order.pagseguro_email = "nandosousafr@gmail.com"
-
-    @order.data_to_send["token"].should == "26C19EE2DF014CAD91E63657BDD9A3F4"
-    @order.data_to_send["email"].should == "nandosousafr@gmail.com"
+  it "should define extra" do
+    @order.extra = 400.00
+    amount = @order.data_to_send["extraAmount"]
+    amount.should == 400.00
 
   end
+
+
+  it "should customize token and email inline" do
+    PagSeguro.stub :config => {"authenticity_token" => nil, "email" => nil}
+    @order.credentials = {:email => "nandosousafr@gmail.com", :token => "26C19EE2DF014CAD91E63657BDD9A3F4" }
+    @order.data_to_send["token"].should == "26C19EE2DF014CAD91E63657BDD9A3F4"
+    @order.data_to_send["email"].should == "nandosousafr@gmail.com"
+  end
+
+  it "should config redirect url" do
+    @order.redirect_url = "http://www.nandosousa.blog.br"
+    @order.data_to_send["redirectUrl"].should == "http://www.nandosousa.blog.br"
+  end
+
+
 
 
 

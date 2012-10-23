@@ -22,6 +22,8 @@ module PagSeguro
     # The list of products added to the order
     attr_accessor :products
 
+
+
     # The billing info that will be sent to PagSeguro.
     attr_accessor :billing
 
@@ -30,7 +32,15 @@ module PagSeguro
     # Can be EN (PAC) or SD (Sedex)
     attr_accessor :shipping_type
 
-    attr_accessor :pagseguro_token, :pagseguro_email
+    #define extra amount for order
+    # could be positive or negative value
+    attr_accessor :extra
+
+    attr_accessor :redirect_url
+    # Define the Pagseguro Credentials
+    attr_accessor :credentials
+
+
     attr_reader :code
 
 
@@ -38,6 +48,7 @@ module PagSeguro
       reset!
       self.id = order_id
       self.billing = {}
+      self.credentials = nil
     end
 
     # Set the order identifier. Should be a unique
@@ -155,13 +166,18 @@ module PagSeguro
       data["reference"] = self.id
 
 
-      if @pagseguro_token.nil?
+      data["extraAmount"] = @extra
+
+      if @credentials.nil?
         data["token"] = PagSeguro.config["authenticity_token"]
         data["email"] = PagSeguro.config["email"]
       else
-        data["token"] = @pagseguro_token
-        data["email"] = @pagseguro_email
+        data["token"] = @credentials[:token]
+        data["email"] = @credentials[:email]
       end
+
+      data["redirectUrl"] = @redirect_url
+
 
       return data
 
