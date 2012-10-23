@@ -49,7 +49,6 @@ module PagSeguro
       self.id = order_id
       self.billing = {}
       self.credentials = nil
-      convert_unit(self.extra, 100)
     end
 
     # Set the order identifier. Should be a unique
@@ -167,7 +166,7 @@ module PagSeguro
       data["reference"] = self.id
 
 
-      data["extraAmount"] = revert_unit(@extra)
+      data["extraAmount"] = revert_unit(convert_unit(@extra, 100))
 
 
       if @credentials.nil?
