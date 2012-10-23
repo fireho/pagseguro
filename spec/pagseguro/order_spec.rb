@@ -1,7 +1,4 @@
 require "spec_helper"
-require 'uri'
-
-
 
 
 describe PagSeguro::Order do
@@ -158,8 +155,8 @@ describe PagSeguro::Order do
 
   it "should define extra" do
     @order.extra = 400.00
-    amount = @order.data_to_send["extraAmount"]
-    amount.should == 400.00
+    amount = @order.data_to_send["extraAmount"].to_s
+    amount.should match(/-?\d+.\d{2}/)
 
   end
 
