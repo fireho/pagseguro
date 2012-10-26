@@ -49,7 +49,7 @@ module PagSeguro
 
 
     def result
-      uri = URI.parse('https://ws.pagseguro.uol.com.br/v2/checkout/')
+      uri = url_to_fetch
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
