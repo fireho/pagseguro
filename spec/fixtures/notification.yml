@@ -1,29 +1,50 @@
 ---
-VendedorEmail: vendedor@example.com
-TransacaoID: 2339ADE917F744DEBEDA890C826386EG
-Referencia: "1"
-Extras: "0,00"
-TipoFrete: FR
-ValorFrete: "0,00"
-Anotacao: "Pagamento do carro"
-DataTransacao: 26/05/2011 12:17:47
-TipoPagamento: Pagamento Online
-StatusTransacao: Aprovado
-CliNome: "Jos\xC3\xA9 da Silva"
-CliEmail: comprador@exemple.com
-CliEndereco: RUA DE CIMA
-CliNumero: "1145"
-CliComplemento: apto 1
-CliBairro: "Pequen\xC3\xB3polis"
-CliCidade: SAO PAULO
-CliEstado: SP
-CliCEP: "04253000"
-CliTelefone: 11 75379467
-NumItens: "1"
-Parcelas: "1"
-ProdID_1: "9"
-ProdDescricao_1: Carro Zero Km
-ProdValor_1: "15,00"
-ProdQuantidade_1: "1"
-ProdFrete_1: "0,00"
-ProdExtras_1: "0,00"
+date: 2011-02-10T16:13:41.000-03:00
+code: 9E884542-81B3-4419-9A75-BCC6FB495EF1
+reference: REF1234
+type: 1
+status: 3
+lastEventDate: 2011-02-15T17:39:14.000-03:00
+paymentMethod:
+ type: 1
+ code: 101
+grossAmount: 49.00
+discountAmount: 0.00
+feeAmount: 0.00
+netAmount: 49.00
+extraAmount: 0.00
+installmentCount: 1
+itemCount: 2
+items:
+ -
+  item:
+   id: 001
+   description: NoteBook Prata
+   quantity: 1
+   amount: 24300.00
+ -
+  item:
+    id: 002
+    description: NoteBook Rosa
+    quantity: 1
+    amount: 25600.00
+
+sender:
+ name: José Comprador
+ email: comprador@uol.com.br
+ phone:
+  areaCode: 11
+  number: 9484848
+shipping:
+ address:
+  street: Av. Brig. Faria Lima
+  number: 1384
+  complement: 5o andar
+  district: Jardim Paulistano
+  postalCode: 01448884
+  city: Sao Paulo
+  state: SP
+  country: BRA
+ type: 1
+ cost: 21.50
+

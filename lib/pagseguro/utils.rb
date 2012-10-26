@@ -9,5 +9,7 @@ module PagSeguro
     def to_iso8859(string)
       string.to_s.unpack("U*").pack("C*")
     end
+
+
   end
 end
