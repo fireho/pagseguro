@@ -41,6 +41,9 @@ module PagSeguro
       end
 
       yield self if block_given?
+
+
+      result
     end
 
     def data
@@ -49,17 +52,9 @@ module PagSeguro
 
 
     def result
-      uri = url_to_fetch
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-      http.ca_file = File.dirname(__FILE__) + "/cacert.pem"
-
-      request = Net::HTTP::Post.new(uri.path)
-      request.form_data = self.credentials
-      response = http.start {|r| r.request request }
-
-      @source = response.body
+      uri = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications/#{self.notification_code}?#{self.credentials.to_param}"
+      request = HTTParty.get(uri)
+      @source = request.body
     end
 
 
@@ -123,7 +118,8 @@ module PagSeguro
     end
 
     def url_to_fetch
-      URI.parse "https://ws.pagseguro.uol.com.br/v2/transactions/notifications/#{self.notification_code}"
+      params = self.credentials.to_param
+      URI.parse("https://ws.pagseguro.uol.com.br/v2/transactions/notifications/#{self.notification_code}?#{params}")
     end
 
   end

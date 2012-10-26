@@ -62,4 +62,7 @@ describe PagSeguro::Notification do
     @notification.notification_code.should == "custom_notification_code"
     @notification.credentials.should == {:token => "custom_token", :email => "c@gmail.com"}
   end
+
+
+
 end

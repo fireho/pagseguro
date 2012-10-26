@@ -1,5 +1,6 @@
 require "net/https"
 require 'net/http'
+require 'httparty'
 require "uri"
 require "time"
 require "bigdecimal"
