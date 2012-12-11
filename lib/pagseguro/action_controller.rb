@@ -1,11 +1,8 @@
 module PagSeguro
   module ActionController
     private
-    def pagseguro_notification(token = nil, &block)
-      return unless request.post?
-
-      notification = PagSeguro::Notification.new(params, token)
-      yield notification if notification.valid?
+    def pagseguro_notification(*args)
+      notification = PagSeguro::Notification.new(args)
     end
   end
 end
