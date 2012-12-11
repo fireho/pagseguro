@@ -120,7 +120,11 @@ module PagSeguro
 
       hash = Hash.from_xml(response.body)
 
-      @code = hash["checkout"]["code"]
+      if hash["checkout"].nil?
+        raise RuntimeError, hash.inspect
+      else
+        @code = hash["checkout"]["code"]
+      end
 
     end
 
