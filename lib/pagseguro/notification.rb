@@ -42,8 +42,8 @@ module PagSeguro
 
       yield self if block_given?
 
-
       result
+
     end
 
     def data
@@ -52,8 +52,7 @@ module PagSeguro
 
 
     def result
-      uri = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications/#{self.notification_code}?#{self.credentials.to_param}"
-      request = HTTParty.get(uri)
+      request = HTTParty.get(url_to_fetch)
       @source = request.body
     end
 
@@ -118,8 +117,7 @@ module PagSeguro
     end
 
     def url_to_fetch
-      params = self.credentials.to_param
-      URI.parse("https://ws.pagseguro.uol.com.br/v2/transactions/notifications/#{self.notification_code}?#{params}")
+      uri = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications/#{self.notification_code}?#{self.credentials.to_param}"
     end
 
   end
