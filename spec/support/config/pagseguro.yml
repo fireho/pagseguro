@@ -3,6 +3,7 @@ development: &development
   return_to: "/invoices/confirmation"
   base: "http://localhost:3000"
   email: "john@doe.com"
+  authenticity_token: 9CA8D46AF0C6177CB4C23D76CAF5E4B0
 
 test:
   <<: *development
