@@ -90,7 +90,7 @@ module PagSeguro
       group = {}
       group[:grossAmount] = fetch('grossAmount').to_f
       group[:discountAmount] = fetch('discountAmount').to_f
-      group[:feeAmount] = fetch('discountAmount').to_f
+      group[:feeAmount] = fetch('feeAmount').to_f
       group[:netAmount] = fetch('netAmount').to_f
       group[:extraAmount] = fetch('extraAmount').to_f
 

@@ -10,7 +10,7 @@ paymentMethod:
  code: 101
 grossAmount: 49.00
 discountAmount: 0.00
-feeAmount: 0.00
+feeAmount: 14.00
 netAmount: 49.00
 extraAmount: 0.00
 installmentCount: 1
