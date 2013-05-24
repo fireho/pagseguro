@@ -2,17 +2,6 @@
 
 Este é um plugin do Ruby on Rails que permite utilizar o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), gateway de pagamentos do [UOL](http://uol.com.br).
 	
-### Retorno Automático
-
-Após o processo de compra e pagamento, o usuário é enviado de volta a seu site. Para isso, você deve configurar uma [URL de retorno](https://pagseguro.uol.com.br/Security/ConfiguracoesWeb/RetornoAutomatico.aspx).
-
-Antes de enviar o usuário para essa URL, o robô do PagSeguro faz um POST para ela, em segundo plano, com os dados e status da transação. Lendo esse POST, você pode obter o status do pedido. Se o pagamento entrou em análise, ou se o usuário pagou usando boleto bancário, o status será "Aguardando Pagamento" ou "Em Análise". Nesses casos, quando a transação for confirmada (o que pode acontecer alguns dias depois) a loja receberá outro POST, informando o novo status. **Cada vez que a transação muda de status, um POST é enviado.**
-
-## REQUISITOS
-
-A versão atual que está sendo mantida suporta Rails 3.0.0 ou superior.
-
-
 ## COMO USAR
 
 ### Configuração
@@ -55,7 +44,7 @@ Esta gem possui um modo de desenvolvimento que permite simular a realização de
 
 Para o ambiente de produção, que irá efetivamente enviar os dados para o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), você precisará adicionar o e-mail cadastrado como vendedor e o `authenticity_token`, que é o Token para Conferência de Segurança, que pode ser conseguido na página <https://pagseguro.uol.com.br/Security/ConfiguracoesWeb/RetornoAutomatico.aspx>.
 
-### Montando o formulário
+### Criando um Pagamento
 
 Para montar o seu formulário, você deverá utilizar a classe `PagSeguro::Order`. Esta classe deverá ser instanciada recebendo um identificador único do pedido. Este identificador permitirá identificar o pedido quando o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659) notificar seu site sobre uma alteração no status do pedido.
 
@@ -109,8 +98,15 @@ Se você precisar, pode definir os dados de cobrança com o método `billing`.
 redirecione o usuário para pagamento:
 
 ~~~.ruby
+# envia requisição ao pagaseguro
 @order.send
+
+
+redirect_to @order.link_to_pay
+
 ~~~
+
+
 
 ### Recebendo notificações
 
