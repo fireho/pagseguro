@@ -40,13 +40,9 @@ production:
   return_to: "/pedido/efetuado"
 ~~~
 
-Esta gem possui um modo de desenvolvimento que permite simular a realização de pedidos e envio de notificações; basta utilizar a opção `developer`. Ela é ativada por padrão nos ambientes de desenvolvimento e teste. Você deve configurar as opções `base`, que deverá apontar para o seu servidor e a URL de retorno, que deverá ser configurada no próprio [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), na página <https://pagseguro.uol.com.br/Security/ConfiguracoesWeb/RetornoAutomatico.aspx>.
-
-Para o ambiente de produção, que irá efetivamente enviar os dados para o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), você precisará adicionar o e-mail cadastrado como vendedor e o `authenticity_token`, que é o Token para Conferência de Segurança, que pode ser conseguido na página <https://pagseguro.uol.com.br/Security/ConfiguracoesWeb/RetornoAutomatico.aspx>.
-
 ### Criando um Pagamento
 
-Para montar o seu formulário, você deverá utilizar a classe `PagSeguro::Order`. Esta classe deverá ser instanciada recebendo um identificador único do pedido. Este identificador permitirá identificar o pedido quando o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659) notificar seu site sobre uma alteração no status do pedido.
+Para criar um pagamento, você deverá utilizar a classe `PagSeguro::Order`. Esta classe deverá ser instanciada recebendo um identificador único do pedido. Este identificador permitirá identificar o pedido quando o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659) notificar seu site sobre uma alteração no status do pedido.
 
 ~~~.ruby
 class CartController < ApplicationController
@@ -94,14 +90,22 @@ Se você precisar, pode definir os dados de cobrança com o método `billing`.
   :phone_number          => "1234-5678"
 }
 ~~~
+Se você precisar, você pode configurar um valor `extra`, para somar ou subtrair do valor total.
+
+~~~.ruby
+#desconto
+@order.extra = -40.00
+
+#acréscimo
+@order.extra = 40.00
+
+~~~
 
 redirecione o usuário para pagamento:
 
 ~~~.ruby
 # envia requisição ao pagaseguro
 @order.send
-
-
 redirect_to @order.link_to_pay
 
 ~~~
