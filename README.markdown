@@ -1,13 +1,7 @@
 # PAGSEGURO
 
 Este é um plugin do Ruby on Rails que permite utilizar o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), gateway de pagamentos do [UOL](http://uol.com.br).
-
-## SOBRE O PAGSEGURO
-
-### Carrinho Próprio
-
-Trabalhando com carrinho próprio, sua loja mantém os dados do carrinho. O processo de inclusão de produtos no carrinho de compras acontece no próprio site da loja. Quando o comprador quiser finalizar sua compra, ele é enviado ao PagSeguro uma única vez com todos os dados de seu pedido. Aqui também, você tem duas opções. Pode enviar os dados do pedido e deixar o PagSeguro solicitar os dados do comprador, ou pode solicitar todos os dados necessários para a compra em sua loja e enviá-los ao PagSeguro.
-
+	
 ### Retorno Automático
 
 Após o processo de compra e pagamento, o usuário é enviado de volta a seu site. Para isso, você deve configurar uma [URL de retorno](https://pagseguro.uol.com.br/Security/ConfiguracoesWeb/RetornoAutomatico.aspx).
@@ -18,7 +12,6 @@ Antes de enviar o usuário para essa URL, o robô do PagSeguro faz um POST para 
 
 A versão atual que está sendo mantida suporta Rails 3.0.0 ou superior.
 
-Se você quiser esta biblioteca em versão mais antigas do Rails (2.3, por exemplo) deverá usar o [branch legacy](http://github.com/fnando/pagseguro/tree/legacy), QUE NÃO É MAIS MANTIDO.
 
 ## COMO USAR
 
@@ -31,7 +24,7 @@ O primeiro passo é instalar a biblioteca. Para isso, basta executar o comando
 Adicione a biblioteca ao arquivo Gemfile:
 
 ~~~.ruby
-gem "pagseguro", "~> 0.1.10"
+gem "pagseguro", :git => 'git://github.com/nandosousafr/pagseguro.git'
 ~~~
 
 Lembre-se de utilizar a versão que você acabou de instalar.
@@ -113,17 +106,10 @@ Se você precisar, pode definir os dados de cobrança com o método `billing`.
 }
 ~~~
 
-Depois que você definiu os produtos do pedido, você pode exibir o formulário.
+redirecione o usuário para pagamento:
 
-~~~.erb
-<!-- app/views/cart/checkout.html.erb -->
-<%= pagseguro_form @order, :submit => "Efetuar pagamento!" %>
-~~~
-
-Por padrão, o formulário é enviado para o email no arquivo de configuração. Você pode mudar o email com a opção `:email`.
-
-~~~.erb
-<%= pagseguro_form @order, :submit => "Efetuar pagamento!", :email => @account.email %>
+~~~.ruby
+@order.send
 ~~~
 
 ### Recebendo notificações
