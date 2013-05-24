@@ -104,10 +104,16 @@ Se você precisar, você pode configurar um valor `extra`, para somar ou subtrai
 redirecione o usuário para pagamento:
 
 ~~~.ruby
-# envia requisição ao pagaseguro
-@order.send
-redirect_to @order.link_to_pay
 
+class CartController < ApplicationController
+	def checkout
+ 		....
+ 		# envia requisição ao pagseguro
+		@order.send
+   	
+		redirect_to @order.link_to_pay
+	end 
+end
 ~~~
 
 
