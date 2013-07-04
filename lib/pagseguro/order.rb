@@ -104,7 +104,6 @@ module PagSeguro
     end
 
     def send
-      params = self.data_to_send.to_param
 
       uri = URI.parse('https://ws.pagseguro.uol.com.br/v2/checkout/')
       http = Net::HTTP.new(uri.host, uri.port)
@@ -150,17 +149,17 @@ module PagSeguro
 
 
       data["shippingType"] = shipping_type_revert(self.shipping_type)
-      data["senderName"] = self.billing[:name]
+      data["senderName"] = Utils.to_iso8859(self.billing[:name])
       data["senderAreaCode"] = self.billing[:phone_area_code]
       data["senderPhone"] = self.billing[:phone_number]
       data["senderEmail"] = self.billing[:email]
 
-      data["shippingAddressStreet"] = self.billing[:address_street]
+      data["shippingAddressStreet"] = Utils.to_iso8859(self.billing[:address_street])
       data["shippingAddressNumber"] = self.billing[:address_number]
-      data["shippingAddressComplement"] = self.billing[:address_complement]
-      data["shippingAddressDistrict"] = self.billing[:address_neighbourhood]
+      data["shippingAddressComplement"] = Utils.to_iso8859(self.billing[:address_complement])
+      data["shippingAddressDistrict"] = Utils.to_iso8859(self.billing[:address_neighbourhood])
       data["shippingAddressPostalCode"] = self.billing[:address_zipcode]
-      data["shippingAddressCity"] = self.billing[:address_city]
+      data["shippingAddressCity"] = Utils.to_iso8859(self.billing[:address_city])
       data["shippingAddressState"] = self.billing[:address_state]
       data["shippingAddressCountry"] = "BRA"  ## No momento, apenas o valor BRA é permitido
       ## https://pagseguro.uol.com.br/v2/guia-de-integracao/api-de-pagamentos.html
