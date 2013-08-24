@@ -1,6 +1,6 @@
-# PAGSEGURO
+# PagSeguro
 
-Este é um plugin do Ruby on Rails que permite utilizar o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), gateway de pagamentos do [UOL](http://uol.com.br).
+Este é um plugin pra Rails que permite utilizar o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), gateway de pagamentos do [UOL](http://uol.com.br). Testado com Rails 4.
 
 ## COMO USAR
 
@@ -18,7 +18,7 @@ gem "pagseguro", :git => 'git://github.com/fireho/pagseguro.git'
 
 Lembre-se de utilizar a versão que você acabou de instalar.
 
-Depois de instalar a biblioteca, você precisará executar gerar o arquivo de configuração, que deve residir em `config/pagseguro.yml`. Para gerar um arquivo de modelo execute
+Depois de instalar a biblioteca, você precisará gerar o arquivo de configuração, que deve residir em `config/pagseguro.yml`. Para gerar um arquivo de modelo execute:
 
     rails generate pagseguro:install
 
@@ -171,6 +171,7 @@ O objeto `notification` possui os seguintes métodos:
 
 **ATENÇÃO:** Não se esqueça de adicionar `skip_before_filter :verify_authenticity_token` ao controller que receberá a notificação; caso contrário, uma exceção será lançada.
 
+
 ### Utilizando modo de desenvolvimento
 
 Toda vez que você enviar o formulário no modo de desenvolvimento, um arquivo YAML será criado em `tmp/pagseguro-#{Rails.env}.yml`. Esse arquivo conterá todos os pedidos enviados.
@@ -183,12 +184,14 @@ O ID do pedido deve ser o mesmo que foi informado quando você instanciou a clas
 
     $ rake pagseguro:notify ID=1 PAYMENT_METHOD=invoice STATUS=canceled NOTE="Enviar por motoboy" NAME="José da Silva" EMAIL="jose@dasilva.com"
 
+
 #### PAYMENT_METHOD
 
 * `credit_card`: Cartão de crédito
 * `invoice`: Boleto
 * `online_transfer`: Pagamento online
 * `pagseguro`: Transferência entre contas do PagSeguro
+
 
 #### STATUS
 
@@ -198,6 +201,7 @@ O ID do pedido deve ser o mesmo que foi informado quando você instanciou a clas
 * `verifying`: Em análise
 * `canceled`: Cancelado
 * `refunded`: Devolvido
+
 
 ### Codificação (Encoding)
 
@@ -218,14 +222,9 @@ pagseguro_notification do |notification|
 end
 ~~~
 
-## AUTOR:
+## AUTORES
 
-Nando Vieira (<http://simplesideias.com.br>)
-
-Recomendar no [Working With Rails](http://www.workingwithrails.com/person/7846-nando-vieira)
-
-## COLABORADORES:
-
+* Nando Vieira (<http://simplesideias.com.br>)
 * Nando Souza (<https://github.com/nandosousafr>)
 * Elomar (<http://github.com/elomar>)
 * Rafael (<http://github.com/rafaels>)
