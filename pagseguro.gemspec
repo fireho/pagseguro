@@ -20,10 +20,10 @@ Gem::Specification.new do |s|
 
 
   s.add_dependency "httparty"                 , "~> 0.11.0"
-  s.add_development_dependency "rails"        , "~> 3.1"
+  s.add_development_dependency "rails"        , "~> 4.0"
   s.add_development_dependency "rake"         , "~> 0.9"
   s.add_development_dependency "fakeweb"      , "~> 1.3"
   s.add_development_dependency "rspec-rails"  , "~> 2.7"
-  s.add_development_dependency "nokogiri"     , "~> 1.3.3"
+  s.add_development_dependency "nokogiri"     , "~> 1.6"
   s.add_development_dependency "sqlite3"      , "~> 1.3"
 end
