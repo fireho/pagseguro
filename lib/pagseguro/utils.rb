@@ -10,6 +10,5 @@ module PagSeguro
       string.to_s.unpack("U*").pack("C*")
     end
 
-
   end
 end
