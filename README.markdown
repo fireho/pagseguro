@@ -1,26 +1,26 @@
 # PAGSEGURO
 
 Este é um plugin do Ruby on Rails que permite utilizar o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), gateway de pagamentos do [UOL](http://uol.com.br).
-	
+
 ## COMO USAR
 
 ### Configuração
 
 O primeiro passo é instalar a biblioteca. Para isso, basta executar o comando
 
-	gem install pagseguro
+    gem install pagseguro
 
 Adicione a biblioteca ao arquivo Gemfile:
 
 ~~~.ruby
-gem "pagseguro", :git => 'git://github.com/nandosousafr/pagseguro.git'
+gem "pagseguro", :git => 'git://github.com/fireho/pagseguro.git'
 ~~~
 
 Lembre-se de utilizar a versão que você acabou de instalar.
 
 Depois de instalar a biblioteca, você precisará executar gerar o arquivo de configuração, que deve residir em `config/pagseguro.yml`. Para gerar um arquivo de modelo execute
 
-	rails generate pagseguro:install
+    rails generate pagseguro:install
 
 O arquivo de configuração gerado será parecido com isto:
 
@@ -49,16 +49,17 @@ class CartController < ApplicationController
   def checkout
     # Busca o pedido associado ao usuario; esta logica deve
     # ser implementada por voce, da maneira que achar melhor
-    @invoice = current_user.invoices.last
+    @invoice = current_user.invoices.first
 
     # Instanciando o objeto para geracao do formulario
     @order = PagSeguro::Order.new(@invoice.id)
 
     # adicionando os produtos do pedido ao objeto do formulario
-    @invoice.products.each do |product|
-      # Estes sao os atributos necessarios. Por padrao, peso (:weight) eh definido para 0,
-      # quantidade eh definido como 1 e frete (:shipping) eh definido como 0.
-      @order.add :id => product.id, :price => product.price, :description => product.title
+    @invoice.items.each do |item|
+      # Peso (:weight) padrão 0
+      # Quantidade (:quantity) padrão 1
+      # Frete (:shipping) padrão definido 0
+      @order.add id: item.id, price: item.price, description: item.title
     end
   end
 end
@@ -67,9 +68,9 @@ end
 Se você precisar, pode definir o tipo de frete com o método `shipping_type`.
 
 ~~~.ruby
-@order.shipping_type = "SD" # Sedex
-@order.shipping_type = "EN" # PAC
-@order.shipping_type = "FR" # Frete Proprio
+@order.shipping_type = "EN" || :pac      # 1 PAC
+@order.shipping_type = "SD" || :sedex    # 2 Sedex
+@order.shipping_type = "FT" || anything  # 3 Frete Proprio
 ~~~
 
 Se você precisar, pode definir os dados de cobrança com o método `billing`.
@@ -87,7 +88,7 @@ Se você precisar, pode definir os dados de cobrança com o método `billing`.
   :address_state         => "AC",
   :address_country       => "Brasil",
   :phone_area_code       => "22",
-  :phone_number          => "1234-5678"
+  :phone_number          => "12345678"
 }
 ~~~
 Se você precisar, você pode configurar um valor `extra`, para somar ou subtrair do valor total.
@@ -106,13 +107,13 @@ redirecione o usuário para pagamento:
 ~~~.ruby
 
 class CartController < ApplicationController
-	def checkout
- 		....
- 		# envia requisição ao pagseguro
-		@order.send
-   	
-		redirect_to @order.link_to_pay
-	end 
+    def checkout
+        ....
+        # envia requisição ao pagseguro
+        @order.send
+
+        redirect_to @order.link_to_pay
+    end
 end
 ~~~
 
@@ -129,13 +130,13 @@ class CartController < ApplicationController
   def confirm
     return unless request.post?
 
-	pagseguro_notification do |notification|
-	  # Aqui voce deve verificar se o pedido possui os mesmos produtos
-	  # que voce cadastrou. O produto soh deve ser liberado caso o status
-	  # do pedido seja "completed" ou "approved"
-	end
+    pagseguro_notification do |notification|
+      # Aqui voce deve verificar se o pedido possui os mesmos produtos
+      # que voce cadastrou. O produto soh deve ser liberado caso o status
+      # do pedido seja "completed" ou "approved"
+    end
 
-	render :nothing => true
+    render :nothing => true
   end
 end
 ~~~
@@ -147,13 +148,13 @@ class CartController < ApplicationController
 
   def confirm
     return unless request.post?
-	# Se voce receber pagamentos de contas diferentes, pode passar o
-	# authenticity_token adequado como parametro para pagseguro_notification
-	account = Account.find(params[:seller_id])
-	pagseguro_notification(account.authenticity_token) do |notification|
-	end
+    # Se voce receber pagamentos de contas diferentes, pode passar o
+    # authenticity_token adequado como parametro para pagseguro_notification
+    account = Account.find(params[:seller_id])
+    pagseguro_notification(account.authenticity_token) do |notification|
+    end
 
-	render :nothing => true
+    render :nothing => true
   end
 end
 ~~~
@@ -176,11 +177,11 @@ Toda vez que você enviar o formulário no modo de desenvolvimento, um arquivo Y
 
 Depois, você será redirecionado para a URL de retorno que você configurou no arquivo `config/pagseguro.yml`. Para simular o envio de notificações, você deve utilizar a rake `pagseguro:notify`.
 
-	$ rake pagseguro:notify ID=<id do pedido>
+    $ rake pagseguro:notify ID=<id do pedido>
 
 O ID do pedido deve ser o mesmo que foi informado quando você instanciou a class `PagSeguro::Order`. Por padrão, o status do pedido será `completed` e o tipo de pagamento `credit_card`. Você pode especificar esses parâmetros como no exemplo abaixo.
 
-	$ rake pagseguro:notify ID=1 PAYMENT_METHOD=invoice STATUS=canceled NOTE="Enviar por motoboy" NAME="José da Silva" EMAIL="jose@dasilva.com"
+    $ rake pagseguro:notify ID=1 PAYMENT_METHOD=invoice STATUS=canceled NOTE="Enviar por motoboy" NAME="José da Silva" EMAIL="jose@dasilva.com"
 
 #### PAYMENT_METHOD
 
@@ -225,28 +226,6 @@ Recomendar no [Working With Rails](http://www.workingwithrails.com/person/7846-n
 
 ## COLABORADORES:
 
+* Nando Souza (<https://github.com/nandosousafr>)
 * Elomar (<http://github.com/elomar>)
 * Rafael (<http://github.com/rafaels>)
-
-## LICENÇA:
-
-(The MIT License)
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
