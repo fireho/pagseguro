@@ -19,7 +19,3 @@ require "pagseguro/action_controller"
 require "pagseguro/query_transaction"
 require "pagseguro/helper"
 require "pagseguro/utils"
-
-
-
-
