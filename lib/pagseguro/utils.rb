@@ -1,3 +1,4 @@
+# TODO: remove and use ruby 2.0
 module PagSeguro
   module Utils
     extend self
