@@ -6,6 +6,7 @@ require "support/config/boot"
 require "rspec/rails"
 require "nokogiri"
 require "support/matcher"
+require "support/faker"
 
 FakeWeb.allow_net_connect = true
 
