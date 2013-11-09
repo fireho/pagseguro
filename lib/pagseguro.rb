@@ -9,8 +9,6 @@ require "active_support/core_ext/hash/conversions"
 
 require "pagseguro/base"
 require "pagseguro/engine"
-require "pagseguro/faker"
-require "pagseguro/rake"
 require "pagseguro/railtie"
 require "pagseguro/notification"
 require "pagseguro/order"
