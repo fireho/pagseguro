@@ -3,13 +3,13 @@ module PagSeguro
   class Notification
 
     STATUS = {
-      1 =>'aguardando pagamento',
-      2 =>'em análise',
-      3 =>'paga',
-      4 =>'disponível',
-      5 =>'em disputa',
-      6 =>'devolvida',
-      7 =>'cancelada'
+      1 => 'aguardando pagamento',
+      2 => 'em análise',
+      3 => 'paga',
+      4 => 'disponível',
+      5 => 'em disputa',
+      6 => 'devolvida',
+      7 => 'cancelada'
     }
 
     PAYMENT_METHOD = {
@@ -20,8 +20,6 @@ module PagSeguro
       5 => 'oi paggo'
     }
 
-
-
     # define xml source string
     attr_accessor :source
 
@@ -30,14 +28,14 @@ module PagSeguro
 
     attr_accessor :notification_code
 
-
-
     def initialize(*args, &blocks)
       @notification_code = args.first
-      if args.second && args.third
-        @credentials = {:email => args.second, :token => args.third }
+      if args[1] && args[2]
+        @credentials = { :email => args.second, :token => args.third }
       else
-        @credentials = {:email => PagSeguro.config["email"], :token =>PagSeguro.config["authenticity_token"] }
+        @credentials = {
+          :email => PagSeguro.config["email"],
+          :token => PagSeguro.config["authenticity_token"] }
       end
 
       yield self if block_given?

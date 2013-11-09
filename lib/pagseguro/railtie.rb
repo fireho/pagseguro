@@ -15,7 +15,7 @@ module PagSeguro
     end
 
     initializer "pagseguro.initialize" do |app|
-      ::ActionView::Base.send(:include, PagSeguro::Helper)
+      # ::ActionView::Base.send(:include, PagSeguro::Helper)
       ::ActionController::Base.send(:include, PagSeguro::ActionController)
     end
 
