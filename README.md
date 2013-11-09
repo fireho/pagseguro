@@ -2,25 +2,25 @@
 
 Este é um plugin pra Rails que permite utilizar o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), gateway de pagamentos do [UOL](http://uol.com.br). Testado com Rails 4.
 
+
 ## COMO USAR
 
 ### Configuração
 
-O primeiro passo é instalar a biblioteca. Para isso, basta executar o comando
 
-    gem install pagseguro
-
-Adicione a biblioteca ao arquivo Gemfile:
+Adicione a biblioteca ao Gemfile:
 
 ~~~.ruby
 gem "pagseguro", :git => 'git://github.com/fireho/pagseguro.git'
 ~~~
 
-Lembre-se de utilizar a versão que você acabou de instalar.
 
-Depois de instalar a biblioteca, você precisará gerar o arquivo de configuração, que deve residir em `config/pagseguro.yml`. Para gerar um arquivo de modelo execute:
+Depois de instalar a biblioteca, você precisará gerar o arquivo de
+configuração, que deve residir em `config/pagseguro.yml`.
+Para gerar um arquivo de modelo execute:
 
-    rails generate pagseguro:install
+    rails g pagseguro:install
+
 
 O arquivo de configuração gerado será parecido com isto:
 
@@ -40,9 +40,14 @@ production:
   return_to: "/pedido/efetuado"
 ~~~
 
+
 ### Criando um Pagamento
 
-Para criar um pagamento, você deverá utilizar a classe `PagSeguro::Order`. Esta classe deverá ser instanciada recebendo um identificador único do pedido. Este identificador permitirá identificar o pedido quando o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659) notificar seu site sobre uma alteração no status do pedido.
+Para criar um pagamento, utilize a classe `PagSeguro::Order`.
+Esta classe deverá ser instanciada recebendo um identificador
+único do pedido. Este identificador permitirá identificar o pedido
+quando o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659)
+notificar seu site sobre uma alteração no status do pedido.
 
 ~~~.ruby
 class CartController < ApplicationController
@@ -228,3 +233,4 @@ end
 * Nando Souza (<https://github.com/nandosousafr>)
 * Elomar (<http://github.com/elomar>)
 * Rafael (<http://github.com/rafaels>)
+* Marcos Piccinini (<http://github.com/nofxx>)
