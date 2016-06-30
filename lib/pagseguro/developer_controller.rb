@@ -1,6 +1,6 @@
 module PagSeguro
   class DeveloperController < ::ActionController::Base
-    skip_before_filter :verify_authenticity_token
+    skip_before_filter :verify_authenticity_token, raise: false
     PAGSEGURO_ORDERS_FILE = File.join(Rails.root, "tmp", "pagseguro-#{Rails.env}.yml")
 
     def create
